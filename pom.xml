@@ -12,7 +12,10 @@
     <description>An app to handle gym CRM system</description>
     <properties>
         <java.version>17</java.version>
-        <org.springframework.version>5.2.8.RELEASE</org.springframework.version>
+        <org.springframework.version>6.1.0</org.springframework.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
     </properties>
     <dependencies>
         <dependency>
