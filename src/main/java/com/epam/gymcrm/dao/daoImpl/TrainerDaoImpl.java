@@ -22,7 +22,7 @@ public class TrainerDaoImpl implements TrainerDao {
 
     @Override
     public List<Trainer> getAll() {
-        ArrayList trainers = (ArrayList) Arrays.asList(storage.getStorage().get("Trainer").values());
+        List trainers =  Arrays.asList(storage.getStorage().get("Trainer").values());
         return trainers;
     }
 
