@@ -2,14 +2,14 @@ package com.epam.gymcrm.adapters.controller;
 
 import com.epam.gymcrm.adapters.dto.CreateTrainerProfileDto;
 import com.epam.gymcrm.adapters.dto.TrainerDto;
-import com.epam.gymcrm.domain.facade.TrainerFacade;
+import com.epam.gymcrm.application.TrainerFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api", consumes = {"application/JSON"}, produces = {"application/JSON", "application/XML"})
+@RequestMapping(value = "/api")
 public class TrainerController {
 
 

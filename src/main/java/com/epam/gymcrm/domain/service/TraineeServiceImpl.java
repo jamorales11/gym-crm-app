@@ -1,22 +1,19 @@
 package com.epam.gymcrm.domain.service;
 
 import com.epam.gymcrm.adapters.dto.TraineeDto;
-import com.epam.gymcrm.adapters.dto.TrainerDto;
 import com.epam.gymcrm.domain.model.Trainee;
-import com.epam.gymcrm.domain.model.Trainer;
 import com.epam.gymcrm.domain.ports.dao.TraineeDao;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class TraineeServiceImpl implements TraineeService {
 
-    private final Logger logger = LoggerFactory.getLogger(TrainerServiceImpl.class);
 
     @Autowired
     public TraineeDao traineeDao;
@@ -38,7 +35,7 @@ public class TraineeServiceImpl implements TraineeService {
         TraineeDto traineeDtoCreated  = modelMapper.map(traineeCreated, TraineeDto.class);
 
 
-        logger.debug("Trainee with id: " + traineeDtoCreated.getTraineeId() + " has been created.");
+        log.debug("Trainee with id: " + traineeDtoCreated.getTraineeId() + " has been created.");
 
         return traineeDtoCreated;
     }

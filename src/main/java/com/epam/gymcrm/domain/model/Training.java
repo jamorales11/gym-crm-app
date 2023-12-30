@@ -9,8 +9,7 @@ public class Training {
     private Date date;
     private Integer duration;
 
-    public Training() {
-    }
+
 
     public Training(String name, Date date, Integer duration) {
         this.name = name;

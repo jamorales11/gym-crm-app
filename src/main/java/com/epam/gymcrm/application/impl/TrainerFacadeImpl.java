@@ -1,6 +1,7 @@
-package com.epam.gymcrm.domain.facade;
+package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.adapters.dto.UserDto;
+import com.epam.gymcrm.application.TrainerFacade;
 import com.epam.gymcrm.domain.service.TrainerService;
 import com.epam.gymcrm.adapters.dto.CreateTrainerProfileDto;
 import com.epam.gymcrm.adapters.dto.TrainerDto;

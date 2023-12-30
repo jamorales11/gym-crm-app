@@ -22,9 +22,6 @@ public class Trainer {
         this.trainees = new ArrayList<>();
     }
 
-    public Trainer(){
-
-    }
 
 
     public Integer getTrainerId() {

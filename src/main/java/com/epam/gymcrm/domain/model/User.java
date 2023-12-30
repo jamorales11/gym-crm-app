@@ -14,8 +14,7 @@ public class User {
 
     private Boolean isActive;
 
-    public User() {
-    }
+
 
     public User(Integer id, String firstName, String lastName, String username, String password, Boolean isActive) {
         this.id = id;

@@ -1,8 +1,8 @@
-package com.epam.gymcrm.domain.facade;
+package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.adapters.dto.*;
+import com.epam.gymcrm.application.TraineeFacade;
 import com.epam.gymcrm.domain.service.TraineeService;
-import com.epam.gymcrm.domain.service.TrainerService;
 import com.epam.gymcrm.domain.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -15,8 +15,9 @@ public class TraineeFacadeImpl implements TraineeFacade {
 
     private final Logger logger = LoggerFactory.getLogger(TraineeFacadeImpl.class);
 
-    @Autowired
+
     private ModelMapper modelMapper;
+
 
     private final TraineeService traineeService;
     private final UserService userService;
@@ -44,6 +45,11 @@ public class TraineeFacadeImpl implements TraineeFacade {
         logger.debug("Trainee with id: " + traineeDtoCreated.getTraineeId() + " and username: " + traineeDtoCreated.getUserDto().getUsername() +" has been created.");
 
         return traineeDtoCreated;
+    }
+
+    @Autowired
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
     }
 
 

@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Scope("singleton")
 public class Storage {
 
     Map<String, Map<Integer, Object>> storage;
