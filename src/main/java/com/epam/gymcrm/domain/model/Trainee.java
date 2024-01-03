@@ -1,14 +1,15 @@
 package com.epam.gymcrm.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.util.ArrayList;
 
 
-@AllArgsConstructor
-@Getter
+@Builder
 @Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Trainee {
 
     private Integer traineeId;
