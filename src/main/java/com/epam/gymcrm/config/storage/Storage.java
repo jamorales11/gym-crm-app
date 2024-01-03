@@ -18,7 +18,6 @@ public class Storage {
     private String storagePath;
 
 
-
     public Storage() {
 
         this.storage = new HashMap<String, Map<Integer, Object>>() {
@@ -29,7 +28,7 @@ public class Storage {
                 HashMap<Integer, Object> users = new HashMap();
                 putAll(Map.of("Trainer", trainers,
                         "Trainee", trainees,
-                        "trainings", trainings,
+                        "Training", trainings,
                         "User", users));
             }
         };
@@ -41,7 +40,7 @@ public class Storage {
     }
 
 
-    private Map<String, Map<Integer, Object>> populateMap(){
+    private Map<String, Map<Integer, Object>> populateMap() {
 
         Map<String, Map<Integer, Object>> storageData = new HashMap<>();
 
@@ -59,7 +58,6 @@ public class Storage {
                     });
             // print all key-value pairs
             //System.out.println("Name : " + userData.get("Name"));
-
 
 
         } catch (Exception e) {

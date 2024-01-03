@@ -8,12 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GymcrmApplication {
 
 
-	public static void main(String[] args) {
-		SpringApplication.run(GymcrmApplication.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(GymcrmApplication.class, args);
 
 
-	}
-
+    }
 
 
 }

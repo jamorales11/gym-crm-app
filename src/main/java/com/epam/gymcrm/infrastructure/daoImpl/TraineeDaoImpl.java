@@ -3,8 +3,7 @@ package com.epam.gymcrm.infrastructure.daoImpl;
 import com.epam.gymcrm.config.storage.Storage;
 import com.epam.gymcrm.domain.dao.TraineeDao;
 import com.epam.gymcrm.domain.model.Trainee;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@Slf4j
 public class TraineeDaoImpl implements TraineeDao {
-
-    private final Logger logger = LoggerFactory.getLogger(TrainerDaoImpl.class);
 
     public Storage storage;
 
@@ -31,18 +29,17 @@ public class TraineeDaoImpl implements TraineeDao {
 
     @Override
     public List<Trainee> getAll() {
-        List trainees =  Arrays.asList(storage.getStorage().get("Trainee").values().toArray());
+        List trainees = Arrays.asList(storage.getStorage().get("Trainee").values().toArray());
         return trainees;
     }
 
     @Override
     public Trainee createTrainer(Trainee trainee) {
         Map<Integer, Object> trainees = storage.getStorage().get("Trainee");
-        trainees.put(trainee.getTraineeId(),trainee);
-        storage.getStorage().put("Trainee",trainees);
+        trainees.put(trainee.getTraineeId(), trainee);
+        storage.getStorage().put("Trainee", trainees);
 
-
-        logger.debug("Trainee has been saved to the storage");
+        log.info("Trainee has been saved to the storage");
 
         return trainee;
     }

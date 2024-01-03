@@ -1,5 +1,6 @@
 package com.epam.gymcrm.application.impl;
 
+import com.epam.gymcrm.application.UserService;
 import com.epam.gymcrm.domain.dto.CreateTraineeProfileDto;
 import com.epam.gymcrm.domain.dto.TraineeDto;
 import com.epam.gymcrm.domain.dto.UserDto;
@@ -25,18 +26,14 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class TraineeServiceTest {
 
-    /*
-    @Spy
-    ModelMapper modelMapper;
-
-
-     */
-
     @Mock
     TraineeRepositoryImpl traineeRepository;
 
     @Mock
     UserRepositoryImpl userRepository;
+
+    @Mock
+    UserService userService;
 
     @InjectMocks
     TraineeServiceImpl traineeService;
@@ -44,6 +41,7 @@ public class TraineeServiceTest {
     @BeforeEach
     void setUp(){
         traineeService.setModelMapper(new ModelMapper());
+        traineeService.setUserService(new UserServiceImpl(userRepository));
     }
 
     @Test
@@ -59,13 +57,10 @@ public class TraineeServiceTest {
                 .address("A").userDto(new UserDto()).trainers(new ArrayList<>())
                 .build();
 
-
-        when(traineeRepository.createTrainee(Mockito.any(Trainee.class))).thenReturn(trainee);
         when(userRepository.createUser(Mockito.any(User.class))).thenReturn(user);
+        when(traineeRepository.createTrainee(Mockito.any(Trainee.class))).thenReturn(trainee);
 
-
-
-        CreateTraineeProfileDto createTraineeProfileDto = new CreateTraineeProfileDto(1,"A","A",true,"A","a");
+        CreateTraineeProfileDto createTraineeProfileDto = new CreateTraineeProfileDto("A","A","A","a");
 
         TraineeDto traineeCreated = traineeService.createTraineeProfile(createTraineeProfileDto);
 

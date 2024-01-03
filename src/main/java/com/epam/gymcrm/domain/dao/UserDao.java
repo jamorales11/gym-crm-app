@@ -11,5 +11,6 @@ public interface UserDao {
     List<User> findUsersByFirstNameAndLastName(String firstName, String lastName);
 
     List<User> getAll();
+
     User createUser(User user);
 }

@@ -6,7 +6,11 @@ import java.util.List;
 
 public interface TrainerDao {
     Trainer get(int id);
+
     List<Trainer> getAll();
+
     Trainer createTrainer(Trainer trainer);
+
+    Trainer updateTrainer(Trainer trainer);
 
 }

@@ -1,6 +1,5 @@
 package com.epam.gymcrm.domain.repository;
 
-import com.epam.gymcrm.domain.dto.UserDto;
 import com.epam.gymcrm.domain.model.User;
 
 import java.util.List;
@@ -11,7 +10,9 @@ public interface UserRepository {
 
     List<User> getAll();
 
-    UserDto get(int id);
+    User get(int id);
+
+    List<User> findUsersByFirstNameAndLastName(String firstName, String lastName);
 
     void updateUser();
 }

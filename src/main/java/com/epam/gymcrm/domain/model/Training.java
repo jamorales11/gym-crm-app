@@ -11,8 +11,18 @@ import java.util.Date;
 @NoArgsConstructor
 public class Training {
 
+    private Integer trainingId;
+
+    private Integer traineeId;
+
+    private Integer trainerId;
+
     private String name;
+
+    private Integer trainingTypeId;
+
     private Date date;
+
     private Integer duration;
 
 }

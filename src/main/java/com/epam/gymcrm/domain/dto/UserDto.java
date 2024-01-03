@@ -1,12 +1,12 @@
 package com.epam.gymcrm.domain.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
 
     private int id;
@@ -15,19 +15,8 @@ public class UserDto {
 
     private String lastName;
 
+    private String username;
 
     private boolean isActive;
-
-
-    public UserDto() {
-    }
-
-    public UserDto(int id, String firstName, String lastName, boolean isActive) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.isActive = isActive;
-    }
-
 
 }

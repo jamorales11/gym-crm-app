@@ -1,21 +1,23 @@
 package com.epam.gymcrm.domain.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+@Builder
 @Setter
 @Getter
-public class CreateTraineeProfileDto extends UserDto {
+@AllArgsConstructor
+public class CreateTraineeProfileDto {
+
+    private String firstName;
+
+    private String lastName;
 
     private String dateOfBirth;
+
     private String address;
-
-
-    public CreateTraineeProfileDto(int id, String firstName, String lastName, boolean isActive, String dateOfBirth, String address) {
-        super(id, firstName, lastName, isActive);
-        this.dateOfBirth = dateOfBirth;
-        this.address = address;
-    }
 
 
 }

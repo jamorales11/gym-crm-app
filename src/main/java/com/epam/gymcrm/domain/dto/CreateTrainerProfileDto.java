@@ -1,22 +1,21 @@
 package com.epam.gymcrm.domain.dto;
 
-public class CreateTrainerProfileDto extends UserDto{
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Builder
+@Setter
+@Getter
+@AllArgsConstructor
+public class CreateTrainerProfileDto {
+
+    private String firstName;
+
+    private String lastName;
 
     private String specialization;
 
-    public CreateTrainerProfileDto(int id, String firstName, String lastName, boolean isActive, String specialization) {
-        super(id, firstName, lastName, isActive);
-        this.specialization = specialization;
-    }
 
-
-
-
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
 }
