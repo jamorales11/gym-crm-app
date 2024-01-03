@@ -1,16 +1,16 @@
-package com.epam.gymcrm.domain.model;
+package com.epam.gymcrm.domain.dto;
 
+import com.epam.gymcrm.domain.model.Trainer;
 import lombok.*;
 
 import java.util.ArrayList;
-
 
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Trainee {
+public class TraineeDto {
 
     private Integer traineeId;
 
@@ -18,7 +18,7 @@ public class Trainee {
 
     private String address;
 
-    private Integer userId;
+    private UserDto userDto;
 
     private ArrayList<Trainer> trainers;
 

@@ -2,11 +2,7 @@ package com.epam.gymcrm.config.storage;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -14,14 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Scope("singleton")
 public class Storage {
 
     Map<String, Map<Integer, Object>> storage;
 
     @Value("${storage.path}")
     private String storagePath;
-
 
 
     public Storage() {
@@ -34,7 +28,7 @@ public class Storage {
                 HashMap<Integer, Object> users = new HashMap();
                 putAll(Map.of("Trainer", trainers,
                         "Trainee", trainees,
-                        "trainings", trainings,
+                        "Training", trainings,
                         "User", users));
             }
         };
@@ -46,7 +40,7 @@ public class Storage {
     }
 
 
-    private Map<String, Map<Integer, Object>> populateMap(){
+    private Map<String, Map<Integer, Object>> populateMap() {
 
         Map<String, Map<Integer, Object>> storageData = new HashMap<>();
 
@@ -64,7 +58,6 @@ public class Storage {
                     });
             // print all key-value pairs
             //System.out.println("Name : " + userData.get("Name"));
-
 
 
         } catch (Exception e) {

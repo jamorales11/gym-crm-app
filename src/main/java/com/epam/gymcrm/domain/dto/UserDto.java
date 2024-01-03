@@ -1,4 +1,4 @@
-package com.epam.gymcrm.domain.model;
+package com.epam.gymcrm.domain.dto;
 
 import lombok.*;
 
@@ -7,9 +7,9 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserDto {
 
-    private Integer id;
+    private int id;
 
     private String firstName;
 
@@ -17,9 +17,6 @@ public class User {
 
     private String username;
 
-    private String password;
-
-    private Boolean isActive;
-
+    private boolean isActive;
 
 }
