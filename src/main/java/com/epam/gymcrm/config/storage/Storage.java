@@ -14,9 +14,6 @@ public class Storage {
 
     Map<String, Map<Integer, Object>> storage;
 
-    @Value("${storage.path}")
-    private String storagePath;
-
 
     public Storage() {
 
@@ -33,38 +30,6 @@ public class Storage {
             }
         };
 
-
-        //System.out.println(storagePath);
-        //this.storage = populateMap();
-
-    }
-
-
-    private Map<String, Map<Integer, Object>> populateMap() {
-
-        Map<String, Map<Integer, Object>> storageData = new HashMap<>();
-
-        // create instance of the ObjectMapper class to map JSON data
-        ObjectMapper mapper = new ObjectMapper();
-        // create instance of the File class
-
-        File fileObj = new File(storagePath);
-
-        // use try-catch block to convert JSON data into Map
-        try {
-            // read JSON data from file using fileObj and map it using ObjectMapper and TypeReference classes
-            storageData = mapper.readValue(
-                    fileObj, new TypeReference<Map<String, Map<Integer, Object>>>() {
-                    });
-            // print all key-value pairs
-            //System.out.println("Name : " + userData.get("Name"));
-
-
-        } catch (Exception e) {
-            // show error message
-            e.printStackTrace();
-        }
-        return storageData;
     }
 
     public Map<String, Map<Integer, Object>> getStorage() {
@@ -74,15 +39,5 @@ public class Storage {
     public void setStorage(Map<String, Map<Integer, Object>> storage) {
         this.storage = storage;
     }
-
-    /*
-    @PostConstruct
-    public void customInit(){
-        System.out.println("Print environment values");
-        System.out.println(storagePath);
-    }
-
-     */
-
 
 }
