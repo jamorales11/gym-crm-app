@@ -19,6 +19,6 @@ public class TrainerDto {
 
     private UserDto userDto;
 
-    private ArrayList<Trainee> trainees;
+    private ArrayList<TraineeDto> trainees;
 
 }

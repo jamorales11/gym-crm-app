@@ -2,6 +2,7 @@ package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.application.TrainerService;
 import com.epam.gymcrm.application.UserService;
+import com.epam.gymcrm.domain.dto.TraineeDto;
 import com.epam.gymcrm.domain.dto.TrainerDto;
 import com.epam.gymcrm.domain.dto.TrainingTypeDto;
 import com.epam.gymcrm.domain.dto.UserDto;
@@ -9,6 +10,7 @@ import com.epam.gymcrm.domain.dto.updateProfile.UpdateTrainerProfileDto;
 import com.epam.gymcrm.domain.model.Trainer;
 import com.epam.gymcrm.domain.model.User;
 import com.epam.gymcrm.exceptions.WrongCredentialsException;
+import com.epam.gymcrm.infrastructure.entity.TraineeEntity;
 import com.epam.gymcrm.infrastructure.entity.TrainerEntity;
 import com.epam.gymcrm.infrastructure.entity.UserEntity;
 import com.epam.gymcrm.infrastructure.repository.TrainerRepository;
@@ -19,6 +21,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -101,6 +106,23 @@ public class TrainerServiceImpl implements TrainerService {
         trainerDto.setUserDto(modelMapper.map(trainerEntity.getUser(), UserDto.class));
 
         return trainerDto;
+
+    }
+
+
+    @Override
+    public List<TraineeDto> getTraineeList(String username, String password) throws  Exception{
+        trainerLogin(username, password);
+
+        List<TraineeEntity> traineeList = trainerRepository.findTrainerByUserUsername(username).getTrainees();
+
+        List<TraineeDto> traineeDtos = new ArrayList<>();
+
+        for(TraineeEntity traineeEntity : traineeList){
+            traineeDtos.add(modelMapper.map(traineeEntity, TraineeDto.class));
+        }
+
+        return traineeDtos;
 
     }
 

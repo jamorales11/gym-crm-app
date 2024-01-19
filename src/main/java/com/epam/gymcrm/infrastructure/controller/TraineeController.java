@@ -4,6 +4,7 @@ import com.epam.gymcrm.application.TraineeService;
 import com.epam.gymcrm.domain.dto.ChangePasswordDto;
 import com.epam.gymcrm.domain.dto.RequestLoginDto;
 import com.epam.gymcrm.domain.dto.TraineeDto;
+import com.epam.gymcrm.domain.dto.TrainerDto;
 import com.epam.gymcrm.domain.dto.createProfile.CreateTraineeProfileDto;
 import com.epam.gymcrm.domain.dto.updateProfile.UpdateTraineeProfileDto;
 import com.epam.gymcrm.domain.model.Trainee;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/trainee")
@@ -47,6 +50,21 @@ public class TraineeController {
     }
 
     @GetMapping
+    ResponseEntity<TraineeDto> selectTrainee(@RequestBody RequestLoginDto requestLoginDto){
+        try {
+
+            TraineeDto traineeDto = traineeService.getTrainee(requestLoginDto.getUsername(), requestLoginDto.getPassword());
+
+            return new ResponseEntity<>(traineeDto, HttpStatus.FOUND);
+
+        } catch (WrongCredentialsException wce){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, wce.getMessage(),wce);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("login")
     ResponseEntity<TraineeDto> traineeLogin(@RequestBody RequestLoginDto requestLoginDto){
 
         try {
@@ -59,6 +77,23 @@ public class TraineeController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, wce.getMessage(),wce);
         }
     }
+
+    @GetMapping("(trainers")
+    ResponseEntity<List<TrainerDto>> getTrainerList(@RequestBody @Valid RequestLoginDto requestLoginDto){
+        try {
+            List<TrainerDto> trainerDtos = traineeService.getTrainerList(requestLoginDto.getUsername(), requestLoginDto.getPassword());
+
+            return new ResponseEntity<>(trainerDtos, HttpStatus.FOUND);
+
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
+        }
+    }
+
+
+
+
+
 
 
     @PatchMapping("/password")

@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -81,8 +83,47 @@ public class TraineeServiceImpl implements TraineeService {
 
             return traineeDto;
 
+    }
+
+
+
+    @Override
+    public TraineeDto getTrainee(String username, String password) throws Exception {
+        traineeLogin(username, password);
+
+
+        TraineeEntity traineeEntity = traineeRepository.findTraineeByUserUsername(username);
+
+        if(traineeEntity == null){
+            throw new Exception("Trainee not found");
+        }
+
+        TraineeDto traineeDto = modelMapper.map(traineeEntity, TraineeDto.class);
+        traineeDto.setUserDto(modelMapper.map(traineeEntity.getUser(), UserDto.class));
+
+        return traineeDto;
 
     }
+
+    @Override
+    public List<TrainerDto> getTrainerList(String username, String password) throws  Exception{
+        traineeLogin(username,password);
+
+        List<TrainerEntity> trainerList = traineeRepository.findTraineeByUserUsername(username).getTrainers();
+
+        List<TrainerDto> trainerDtos = new ArrayList<>();
+
+        for(TrainerEntity trainerEntity: trainerList){
+            trainerDtos.add(modelMapper.map(trainerEntity, TrainerDto.class));
+        }
+
+        return trainerDtos;
+    }
+
+
+
+
+
 
     @Override
     @Transactional

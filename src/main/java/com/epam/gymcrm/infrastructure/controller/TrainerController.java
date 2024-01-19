@@ -3,6 +3,7 @@ package com.epam.gymcrm.infrastructure.controller;
 import com.epam.gymcrm.application.TrainerService;
 import com.epam.gymcrm.domain.dto.ChangePasswordDto;
 import com.epam.gymcrm.domain.dto.RequestLoginDto;
+import com.epam.gymcrm.domain.dto.TraineeDto;
 import com.epam.gymcrm.domain.dto.TrainerDto;
 import com.epam.gymcrm.domain.dto.createProfile.CreateTrainerProfileDto;
 import com.epam.gymcrm.domain.dto.updateProfile.UpdateTrainerProfileDto;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 
 @RestController
@@ -46,15 +49,43 @@ public class TrainerController {
         }
     }
 
-
     @GetMapping
-    ResponseEntity<TrainerDto> trainerLogin(@RequestBody @Valid RequestLoginDto requestLoginDto) throws ResponseStatusException{
+    ResponseEntity<TrainerDto> selectTrainer(@RequestBody RequestLoginDto requestLoginDto){
+        try {
+            TrainerDto trainerDto = trainerService.getTrainer(requestLoginDto.getUsername(), requestLoginDto.getPassword());
+
+            return new ResponseEntity<>(trainerDto, HttpStatus.FOUND);
+
+        } catch (WrongCredentialsException wce){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, wce.getMessage(),wce);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+
+    @GetMapping("login")
+    ResponseEntity<TrainerDto> trainerLogin(@RequestBody @Valid RequestLoginDto requestLoginDto) {
 
         try {
 
             TrainerDto trainerDtoFound = trainerService.trainerLogin( requestLoginDto.getUsername(), requestLoginDto.getPassword());
 
             return new ResponseEntity<>(trainerDtoFound, HttpStatus.OK);
+
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
+        }
+    }
+
+
+    @GetMapping("/trainees")
+    ResponseEntity<List<TraineeDto>> getTraineeList(@RequestBody @Valid RequestLoginDto requestLoginDto){
+        try {
+
+            List<TraineeDto> traineeDtos = trainerService.getTraineeList(requestLoginDto.getUsername(), requestLoginDto.getPassword());
+
+            return new ResponseEntity<>(traineeDtos, HttpStatus.FOUND);
 
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage(), e);
