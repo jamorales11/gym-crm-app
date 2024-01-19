@@ -1,14 +1,12 @@
 package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.domain.model.User;
-import com.epam.gymcrm.domain.repository.UserRepository;
+import com.epam.gymcrm.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class UserServiceTest {
+public class UserEntityServiceTest {
 
     @Mock
     UserRepository userRepository;

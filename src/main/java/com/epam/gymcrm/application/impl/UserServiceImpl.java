@@ -1,7 +1,7 @@
 package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.application.UserService;
-import com.epam.gymcrm.domain.repository.UserRepository;
+import com.epam.gymcrm.infrastructure.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.Random;
 public class UserServiceImpl implements UserService {
 
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;

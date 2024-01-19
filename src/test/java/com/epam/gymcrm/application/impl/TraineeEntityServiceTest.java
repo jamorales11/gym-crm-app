@@ -1,20 +1,19 @@
 package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.application.UserService;
-import com.epam.gymcrm.domain.dto.CreateTraineeProfileDto;
+import com.epam.gymcrm.domain.dto.createProfile.CreateTraineeProfileDto;
 import com.epam.gymcrm.domain.dto.TraineeDto;
 import com.epam.gymcrm.domain.dto.UserDto;
 import com.epam.gymcrm.domain.model.Trainee;
-import com.epam.gymcrm.domain.model.User;
-import com.epam.gymcrm.infrastructure.repositoryImpl.TraineeRepositoryImpl;
-import com.epam.gymcrm.infrastructure.repositoryImpl.UserRepositoryImpl;
+import com.epam.gymcrm.infrastructure.entity.UserEntity;
+import com.epam.gymcrm.infrastructure.repository.TraineeRepository;
+import com.epam.gymcrm.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -24,13 +23,13 @@ import static org.mockito.Mockito.*;
 
 //ExtendWith(MockitoExtension.class)
 @SpringBootTest
-public class TraineeServiceTest {
+public class TraineeEntityServiceTest {
 
     @Mock
-    TraineeRepositoryImpl traineeRepository;
+    TraineeRepository traineeRepository;
 
     @Mock
-    UserRepositoryImpl userRepository;
+    UserRepository userRepository;
 
     @Mock
     UserService userService;
@@ -50,14 +49,14 @@ public class TraineeServiceTest {
         Trainee trainee = Trainee.builder().traineeId(1).dateOfBirth("A").address("A").userId(1).trainers(new ArrayList<>())
                 .build();
 
-        User user = User.builder().id(1).firstName("A").lastName("A").username("A").password("A").isActive(true)
+        UserEntity userEntity = UserEntity.builder().id(1).firstName("A").lastName("A").username("A").password("A").isActive(true)
                 .build();
 
         TraineeDto traineeDto = TraineeDto.builder().traineeId(1).dateOfBirth("A")
                 .address("A").userDto(new UserDto()).trainers(new ArrayList<>())
                 .build();
 
-        when(userRepository.createUser(Mockito.any(User.class))).thenReturn(user);
+        when(userRepository.save(Mockito.any(UserEntity.class))).thenReturn(userEntity);
         when(traineeRepository.createTrainee(Mockito.any(Trainee.class))).thenReturn(trainee);
 
         CreateTraineeProfileDto createTraineeProfileDto = new CreateTraineeProfileDto("A","A","A","a");
@@ -66,7 +65,7 @@ public class TraineeServiceTest {
 
         Assertions.assertNotNull(traineeCreated);
         Assertions.assertNotNull(traineeCreated.getUserDto());
-        Assertions.assertEquals(user.getId(), traineeCreated.getUserDto().getId());
+        Assertions.assertEquals(userEntity.getId(), traineeCreated.getUserDto().getId());
     }
 
 }

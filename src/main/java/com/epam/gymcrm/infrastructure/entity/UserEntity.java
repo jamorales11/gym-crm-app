@@ -1,16 +1,16 @@
 package com.epam.gymcrm.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
+@Builder
 @Setter
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
-@Table(schema="public")
-public class User {
+@Table(name="user", schema="public")
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +24,7 @@ public class User {
 
     private String password;
 
-    private boolean isActive;
+    private Boolean isActive;
 
 
 

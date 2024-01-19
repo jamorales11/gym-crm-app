@@ -1,6 +1,7 @@
 package com.epam.gymcrm.domain.dto;
 
 import com.epam.gymcrm.domain.model.Trainee;
+import com.epam.gymcrm.infrastructure.entity.TrainingTypeEntity;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class TrainerDto {
 
     private Integer trainerId;
 
-    private String specialization;
+    private TrainingTypeDto specialization;
 
     private UserDto userDto;
 
