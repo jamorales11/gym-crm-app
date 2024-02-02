@@ -1,4 +1,4 @@
-package com.epam.gymcrm.infrastructure.repository;
+package com.epam.gymcrm.domain.repository;
 
 import com.epam.gymcrm.domain.model.Training;
 import com.epam.gymcrm.infrastructure.entity.TrainerEntity;

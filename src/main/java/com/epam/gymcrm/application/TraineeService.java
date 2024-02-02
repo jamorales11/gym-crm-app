@@ -1,22 +1,24 @@
 package com.epam.gymcrm.application;
 
-import com.epam.gymcrm.domain.dto.TraineeDto;
-import com.epam.gymcrm.domain.dto.TrainerDto;
-import com.epam.gymcrm.domain.dto.updateProfile.UpdateTraineeProfileDto;
+import com.epam.gymcrm.application.dto.trainee.TraineeDto;
+import com.epam.gymcrm.application.dto.trainee.TraineeTrainerListDTO;
+import com.epam.gymcrm.application.dto.trainer.TrainerDto;
+import com.epam.gymcrm.application.dto.response.RegistrationResponseDTO;
+import com.epam.gymcrm.application.dto.updateProfile.UpdateTraineeProfileDto;
 import com.epam.gymcrm.domain.model.Trainee;
 import com.epam.gymcrm.domain.model.User;
-import com.epam.gymcrm.exceptions.WrongCredentialsException;
 
 import java.util.List;
 
 public interface TraineeService {
 
 
-    TraineeDto createTraineeProfile(User userToCreate, Trainee traineeToCreate);
+    RegistrationResponseDTO createTraineeProfile(User userToCreate, Trainee traineeToCreate);
 
-    TraineeDto traineeLogin(String username, String password) throws WrongCredentialsException;
+    TraineeDto traineeLogin(String username, String password) throws Exception;
 
-    TraineeDto getTrainee(String username, String password) throws Exception;
+    TraineeDto getTrainee(String username) throws Exception;
+
 
     List<TrainerDto> getTrainerList(String username, String password) throws  Exception;
 
@@ -29,4 +31,6 @@ public interface TraineeService {
     TraineeDto updateTraineeProfile(UpdateTraineeProfileDto updateTraineeProfileDto) throws Exception;
 
     void deleteTrainee(String username, String password) throws Exception;
+
+    List<TraineeTrainerListDTO> getNotAssignedOnTrainers(String username, String password) throws Exception;;
 }

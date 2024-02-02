@@ -27,14 +27,14 @@ public class TrainerEntity {
     private UserEntity user;
 
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "trainers_trainees",
             joinColumns = @JoinColumn(name = "trainer_id"),
             inverseJoinColumns = @JoinColumn(name = "trainee_id"))
-    private List<TraineeEntity> trainees = new ArrayList<>();;
+    private List<TraineeEntity> trainees = new ArrayList<>();
 
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
-    private List<TrainingEntity> trainings = new ArrayList<>();;
+    private List<TrainingEntity> trainings = new ArrayList<>();
 
 
 

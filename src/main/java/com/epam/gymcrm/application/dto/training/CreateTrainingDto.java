@@ -1,4 +1,4 @@
-package com.epam.gymcrm.domain.dto.trainingtype;
+package com.epam.gymcrm.application.dto.training;
 
 import lombok.*;
 
@@ -17,11 +17,10 @@ public class CreateTrainingDto {
 
     private int duration;
 
-    private int traineeUsername;
+    private String traineeUsername;
 
-    private int trainerUsername;
+    private String traineePassword;
 
-    private int trainingTypeId;
-
+    private String trainerUsername;
 
 }

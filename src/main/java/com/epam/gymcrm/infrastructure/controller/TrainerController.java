@@ -1,15 +1,18 @@
 package com.epam.gymcrm.infrastructure.controller;
 
 import com.epam.gymcrm.application.TrainerService;
-import com.epam.gymcrm.domain.dto.ChangePasswordDto;
-import com.epam.gymcrm.domain.dto.RequestLoginDto;
-import com.epam.gymcrm.domain.dto.TraineeDto;
-import com.epam.gymcrm.domain.dto.TrainerDto;
-import com.epam.gymcrm.domain.dto.createProfile.CreateTrainerProfileDto;
-import com.epam.gymcrm.domain.dto.updateProfile.UpdateTrainerProfileDto;
+import com.epam.gymcrm.application.dto.ChangePasswordDto;
+import com.epam.gymcrm.application.dto.RequestLoginDto;
+import com.epam.gymcrm.application.dto.trainee.TraineeDto;
+import com.epam.gymcrm.application.dto.trainer.TrainerDto;
+import com.epam.gymcrm.application.dto.trainer.CreateTrainerProfileDto;
+import com.epam.gymcrm.application.dto.response.RegistrationResponseDTO;
+import com.epam.gymcrm.application.dto.updateProfile.UpdateTrainerProfileDto;
 import com.epam.gymcrm.domain.model.Trainer;
 import com.epam.gymcrm.domain.model.User;
-import com.epam.gymcrm.exceptions.WrongCredentialsException;
+import com.epam.gymcrm.domain.exceptions.WrongCredentialsException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-
+@Tag(name = "Trainer", description = "the Trainer Api")
 @RestController
 @RequestMapping(value = "/api/trainer")
 public class TrainerController {
@@ -34,25 +37,32 @@ public class TrainerController {
         this.trainerService = trainerService;
     }
 
+    @Operation(summary = "Trainer Registration", description = "Create a new Trainer profile")
     @PostMapping
-    ResponseEntity<TrainerDto> createTrainerProfile(@RequestBody @Valid CreateTrainerProfileDto createTrainerProfileDto) {
+    ResponseEntity<RegistrationResponseDTO> createTrainerProfile(@RequestBody @Valid CreateTrainerProfileDto createTrainerProfileDto) {
 
         try {
+
+
             User userToCreate = modelMapper.map(createTrainerProfileDto, User.class);
             Trainer trainerToCreate = modelMapper.map(createTrainerProfileDto, Trainer.class);
 
-            TrainerDto trainerDtoCreated = trainerService.createTrainerProfile(userToCreate, trainerToCreate);
-            return new ResponseEntity<>(trainerDtoCreated, HttpStatus.CREATED);
+
+            RegistrationResponseDTO registrationResponseDTO = trainerService.createTrainerProfile(userToCreate, trainerToCreate);
+            return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainer Not Created", e);
         }
     }
 
+    @Operation(summary = "Get Trainer Profile", description = "Select Trainer profile by username")
     @GetMapping
     ResponseEntity<TrainerDto> selectTrainer(@RequestBody RequestLoginDto requestLoginDto){
         try {
-            TrainerDto trainerDto = trainerService.getTrainer(requestLoginDto.getUsername(), requestLoginDto.getPassword());
+            trainerService.trainerLogin(requestLoginDto.getUsername(), requestLoginDto.getPassword());
+
+            TrainerDto trainerDto = trainerService.getTrainer(requestLoginDto.getUsername());
 
             return new ResponseEntity<>(trainerDto, HttpStatus.FOUND);
 
@@ -63,8 +73,8 @@ public class TrainerController {
         }
     }
 
-
-    @GetMapping("login")
+    @Operation(summary = "Trainer Login", description = "Trainer username and password matching")
+    @GetMapping("/login")
     ResponseEntity<TrainerDto> trainerLogin(@RequestBody @Valid RequestLoginDto requestLoginDto) {
 
         try {
@@ -78,7 +88,7 @@ public class TrainerController {
         }
     }
 
-
+    @Operation(summary = "Get Trainer", description = "A")
     @GetMapping("/trainees")
     ResponseEntity<List<TraineeDto>> getTraineeList(@RequestBody @Valid RequestLoginDto requestLoginDto){
         try {
@@ -92,7 +102,7 @@ public class TrainerController {
         }
     }
 
-
+    @Operation(summary = "Change Trainee Login", description = "A")
     @PatchMapping("/password")
     ResponseEntity<?> changeTrainerPassword(@RequestBody @Valid ChangePasswordDto changePasswordDto){
 
@@ -108,7 +118,7 @@ public class TrainerController {
         }
     }
 
-
+    @Operation(summary = "Deactivate Trainer", description = "A")
     @PatchMapping("/deactivate")
     ResponseEntity<?> deactivateTrainer(@RequestBody @Valid RequestLoginDto requestLoginDto){
         try {
@@ -123,7 +133,7 @@ public class TrainerController {
         }
     }
 
-
+    @Operation(summary = "Activate Trainer", description = "A")
     @PatchMapping("/activate")
     ResponseEntity<?> activateTrainer(@RequestBody @Valid RequestLoginDto requestLoginDto){
         try {
@@ -138,6 +148,7 @@ public class TrainerController {
         }
     }
 
+    @Operation(summary = "Update Trainer profile", description = "A")
     @PatchMapping
     ResponseEntity<TrainerDto> updateTrainerProfile(@RequestBody @Valid UpdateTrainerProfileDto updateTrainerProfileDto){
         try{
@@ -152,7 +163,8 @@ public class TrainerController {
         }
     }
 
-
+    /*
+    @Operation(summary = "A", description = "A")
     @DeleteMapping
     ResponseEntity<?> deleteTrainerProfile(@RequestBody @Valid RequestLoginDto requestLoginDto){
         try {
@@ -166,6 +178,8 @@ public class TrainerController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
+
+     */
 
 
     @Autowired

@@ -2,6 +2,8 @@ package com.epam.gymcrm.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -30,9 +32,16 @@ public class TraineeEntity {
     private UserEntity user;
 
     @ManyToMany(mappedBy = "trainees")
-    private List<TrainerEntity> trainers = new ArrayList<>();;
+    private List<TrainerEntity> trainers = new ArrayList<>();
 
     @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL)
-    private List<TrainingEntity> trainings = new ArrayList<>();;
+    private List<TrainingEntity> trainings = new ArrayList<>();
+
+    @PreRemove
+    private void removeTrainerAssociations(){
+        for(TrainerEntity trainer : this.trainers){
+            trainer.getTrainees().remove(this);
+        }
+    }
 
 }

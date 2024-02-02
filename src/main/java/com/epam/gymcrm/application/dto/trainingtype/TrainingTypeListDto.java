@@ -1,4 +1,4 @@
-package com.epam.gymcrm.domain.dto;
+package com.epam.gymcrm.application.dto.trainingtype;
 
 import lombok.*;
 
@@ -7,9 +7,10 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TrainingTypeDto {
+public class TrainingTypeListDto {
 
     private int id;
 
     private String name;
+
 }

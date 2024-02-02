@@ -1,6 +1,5 @@
-package com.epam.gymcrm.domain.dto.updateProfile;
+package com.epam.gymcrm.application.dto.updateProfile;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

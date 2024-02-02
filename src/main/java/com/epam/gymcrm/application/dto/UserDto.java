@@ -1,4 +1,4 @@
-package com.epam.gymcrm.domain.dto;
+package com.epam.gymcrm.application.dto;
 
 import lombok.*;
 
@@ -9,15 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 public class UserDto {
 
-    private int id;
 
     private String firstName;
 
     private String lastName;
-
-    private String username;
-
-    private String password;
 
     private boolean isActive;
 

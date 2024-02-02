@@ -1,4 +1,4 @@
-package com.epam.gymcrm.domain.dto.createProfile;
+package com.epam.gymcrm.application.dto.trainer;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

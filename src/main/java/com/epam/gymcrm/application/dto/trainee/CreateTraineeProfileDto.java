@@ -1,7 +1,6 @@
-package com.epam.gymcrm.domain.dto.createProfile;
+package com.epam.gymcrm.application.dto.trainee;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.*;
 
 @Builder

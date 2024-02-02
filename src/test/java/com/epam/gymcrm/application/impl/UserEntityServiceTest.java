@@ -1,7 +1,7 @@
 package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.domain.model.User;
-import com.epam.gymcrm.infrastructure.repository.UserRepository;
+import com.epam.gymcrm.domain.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

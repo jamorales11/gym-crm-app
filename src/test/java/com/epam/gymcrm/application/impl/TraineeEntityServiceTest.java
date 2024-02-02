@@ -1,13 +1,13 @@
 package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.application.UserService;
-import com.epam.gymcrm.domain.dto.createProfile.CreateTraineeProfileDto;
-import com.epam.gymcrm.domain.dto.TraineeDto;
-import com.epam.gymcrm.domain.dto.UserDto;
+import com.epam.gymcrm.application.dto.trainee.CreateTraineeProfileDto;
+import com.epam.gymcrm.application.dto.trainee.TraineeDto;
+import com.epam.gymcrm.application.dto.UserDto;
 import com.epam.gymcrm.domain.model.Trainee;
 import com.epam.gymcrm.infrastructure.entity.UserEntity;
-import com.epam.gymcrm.infrastructure.repository.TraineeRepository;
-import com.epam.gymcrm.infrastructure.repository.UserRepository;
+import com.epam.gymcrm.domain.repository.TraineeRepository;
+import com.epam.gymcrm.domain.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

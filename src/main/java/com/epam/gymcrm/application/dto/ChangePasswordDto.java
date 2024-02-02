@@ -1,4 +1,4 @@
-package com.epam.gymcrm.domain.dto;
+package com.epam.gymcrm.application.dto;
 
 import lombok.*;
 

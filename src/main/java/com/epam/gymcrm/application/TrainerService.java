@@ -1,22 +1,22 @@
 package com.epam.gymcrm.application;
 
-import com.epam.gymcrm.domain.dto.TraineeDto;
-import com.epam.gymcrm.domain.dto.TrainerDto;
-import com.epam.gymcrm.domain.dto.updateProfile.UpdateTrainerProfileDto;
+import com.epam.gymcrm.application.dto.trainee.TraineeDto;
+import com.epam.gymcrm.application.dto.trainer.TrainerDto;
+import com.epam.gymcrm.application.dto.response.RegistrationResponseDTO;
+import com.epam.gymcrm.application.dto.updateProfile.UpdateTrainerProfileDto;
 import com.epam.gymcrm.domain.model.Trainer;
 import com.epam.gymcrm.domain.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TrainerService {
 
 
-    TrainerDto createTrainerProfile(User userToCreate, Trainer trainerToCreate);
+    RegistrationResponseDTO createTrainerProfile(User userToCreate, Trainer trainerToCreate);
 
     TrainerDto trainerLogin(String username, String password) throws Exception;
 
-    TrainerDto getTrainer(String username, String password) throws Exception;
+    TrainerDto getTrainer(String username) throws Exception;
 
     List<TraineeDto> getTraineeList(String username, String password) throws  Exception;
 

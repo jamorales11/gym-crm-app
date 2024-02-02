@@ -2,29 +2,31 @@ package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.application.TraineeService;
 import com.epam.gymcrm.application.UserService;
-import com.epam.gymcrm.domain.dto.TraineeDto;
-import com.epam.gymcrm.domain.dto.TrainerDto;
-import com.epam.gymcrm.domain.dto.TrainingTypeDto;
-import com.epam.gymcrm.domain.dto.UserDto;
-import com.epam.gymcrm.domain.dto.updateProfile.UpdateTraineeProfileDto;
-import com.epam.gymcrm.domain.dto.updateProfile.UpdateTrainerProfileDto;
+import com.epam.gymcrm.application.dto.trainee.TraineeDto;
+import com.epam.gymcrm.application.dto.trainee.TraineeTrainerListDTO;
+import com.epam.gymcrm.application.dto.trainer.TrainerDto;
+import com.epam.gymcrm.application.dto.trainingtype.TrainingTypeDto;
+import com.epam.gymcrm.application.dto.UserDto;
+import com.epam.gymcrm.application.dto.response.RegistrationResponseDTO;
+import com.epam.gymcrm.application.dto.updateProfile.UpdateTraineeProfileDto;
 import com.epam.gymcrm.domain.model.Trainee;
 import com.epam.gymcrm.domain.model.User;
-import com.epam.gymcrm.exceptions.WrongCredentialsException;
+import com.epam.gymcrm.domain.exceptions.WrongCredentialsException;
 import com.epam.gymcrm.infrastructure.entity.TraineeEntity;
 import com.epam.gymcrm.infrastructure.entity.TrainerEntity;
 import com.epam.gymcrm.infrastructure.entity.UserEntity;
-import com.epam.gymcrm.infrastructure.repository.TraineeRepository;
-import com.epam.gymcrm.infrastructure.repository.UserRepository;
+import com.epam.gymcrm.domain.repository.TraineeRepository;
+import com.epam.gymcrm.domain.repository.TrainerRepository;
+import com.epam.gymcrm.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,19 +34,25 @@ public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeRepository traineeRepository;
     private final UserRepository userRepository;
+
+    private final TrainerRepository trainerRepository;
+
+
     private ModelMapper modelMapper;
     private UserService userService;
 
 
-    public TraineeServiceImpl(TraineeRepository traineeRepository, UserRepository userRepository, UserService userService) {
+
+    public TraineeServiceImpl(TraineeRepository traineeRepository, UserRepository userRepository, TrainerRepository trainerRepository, UserService userService) {
         this.traineeRepository = traineeRepository;
         this.userRepository = userRepository;
+        this.trainerRepository = trainerRepository;
         this.userService = userService;
     }
 
     @Override
     @Transactional
-    public TraineeDto createTraineeProfile(User userToCreate, Trainee traineeToCreate) {
+    public RegistrationResponseDTO createTraineeProfile(User userToCreate, Trainee traineeToCreate) {
 
         UserEntity userEntity = modelMapper.map(userToCreate, UserEntity.class);
         TraineeEntity traineeEntity = modelMapper.map(traineeToCreate, TraineeEntity.class);
@@ -61,16 +69,17 @@ public class TraineeServiceImpl implements TraineeService {
         log.debug("Trainee with traineeId: " + traineeEntityCreated.getTraineeId() +
                 " and userId: " + traineeEntityCreated.getUser().getId() + " has been created.");
 
-        TraineeDto traineeDto = modelMapper.map(traineeEntityCreated, TraineeDto.class);
-        traineeDto.setUserDto(modelMapper.map(traineeEntityCreated.getUser(), UserDto.class));
 
-        return traineeDto;
+        return RegistrationResponseDTO.builder()
+                .username(traineeEntityCreated.getUser().getUsername())
+                .password(traineeEntityCreated.getUser().getPassword())
+                .build();
     }
 
 
 
     @Override
-    public TraineeDto traineeLogin(String username, String password) throws WrongCredentialsException{
+    public TraineeDto traineeLogin(String username, String password) throws Exception{
 
             TraineeEntity traineeEntity = traineeRepository.findTraineeByUserUsernameAndUserPassword(username,password);
 
@@ -88,22 +97,33 @@ public class TraineeServiceImpl implements TraineeService {
 
 
     @Override
-    public TraineeDto getTrainee(String username, String password) throws Exception {
-        traineeLogin(username, password);
-
+    public TraineeDto getTrainee(String username) throws Exception {
 
         TraineeEntity traineeEntity = traineeRepository.findTraineeByUserUsername(username);
 
         if(traineeEntity == null){
+            log.error("Trainee with username " + username + "not found.");
             throw new Exception("Trainee not found");
         }
 
         TraineeDto traineeDto = modelMapper.map(traineeEntity, TraineeDto.class);
         traineeDto.setUserDto(modelMapper.map(traineeEntity.getUser(), UserDto.class));
+        traineeDto.setTrainers(new ArrayList<TraineeTrainerListDTO>(
+                traineeEntity.getTrainers().stream().map(trainerEntity -> TraineeTrainerListDTO.builder()
+                                .username(trainerEntity.getUser().getUsername())
+                                .firstName(trainerEntity.getUser().getFirstName())
+                                .lastName(trainerEntity.getUser().getLastName())
+                                .specialization(modelMapper.map(trainerEntity.getSpecialization(), TrainingTypeDto.class))
+                                .build())
+                        .collect(Collectors.toList())));
 
         return traineeDto;
 
     }
+
+
+
+
 
     @Override
     public List<TrainerDto> getTrainerList(String username, String password) throws  Exception{
@@ -115,6 +135,7 @@ public class TraineeServiceImpl implements TraineeService {
 
         for(TrainerEntity trainerEntity: trainerList){
             trainerDtos.add(modelMapper.map(trainerEntity, TrainerDto.class));
+            trainerDtos.add(TrainerDto.builder().build());
         }
 
         return trainerDtos;
@@ -193,6 +214,39 @@ public class TraineeServiceImpl implements TraineeService {
 
         TraineeEntity traineeEntity = traineeRepository.findTraineeByUserUsername(username);
         traineeRepository.delete(traineeEntity);
+
+    }
+
+
+
+
+
+    @Override
+    @Transactional
+    public List<TraineeTrainerListDTO> getNotAssignedOnTrainers(String username, String password) throws Exception{
+
+        traineeLogin(username,password);
+        List<TrainerEntity> trainersRes = trainerRepository.findAll();
+
+        List<TrainerEntity> trainersAssigned = traineeRepository.findTraineeByUserUsername(username)
+                        .getTrainers();
+
+        List<TrainerEntity> trainerEntityList = trainersRes.stream().filter(trainerEntity -> (!trainersAssigned.contains(trainerEntity))).toList();
+
+        List<TraineeTrainerListDTO> trainerDtos = new ArrayList<>();
+
+        for (TrainerEntity trainer : trainerEntityList){
+            trainerDtos.add(TraineeTrainerListDTO.builder()
+                            .username(trainer.getUser().getUsername())
+                            .firstName(trainer.getUser().getFirstName())
+                            .lastName(trainer.getUser().getLastName())
+                            .specialization(modelMapper.map(trainer.getSpecialization(), TrainingTypeDto.class))
+                    .build());
+        }
+
+        return trainerDtos;
+
+
 
     }
 

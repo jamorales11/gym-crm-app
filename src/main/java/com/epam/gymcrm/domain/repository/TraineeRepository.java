@@ -1,8 +1,10 @@
-package com.epam.gymcrm.infrastructure.repository;
+package com.epam.gymcrm.domain.repository;
 
 import com.epam.gymcrm.infrastructure.entity.TraineeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface TraineeRepository extends JpaRepository<TraineeEntity, Integer> {
@@ -12,9 +14,7 @@ public interface TraineeRepository extends JpaRepository<TraineeEntity, Integer>
     TraineeEntity findTraineeByUserUsername(String username);
 
 
-    //List<TrainerEntity> getAll();
 
-    //TraineeEntity get(int id);
 
-    //void updateTrainer();
+
 }
