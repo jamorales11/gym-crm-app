@@ -1,16 +1,20 @@
 package com.epam.gymcrm.domain.repository;
 
-import com.epam.gymcrm.domain.model.Trainer;
 
-import java.util.List;
+import com.epam.gymcrm.infrastructure.entity.TrainerEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TrainerRepository {
+@Repository
+public interface TrainerRepository extends JpaRepository<TrainerEntity, Integer> {
 
-    Trainer createTrainer(Trainer trainer);
+    TrainerEntity findTrainerByUserUsernameAndUserPassword(String username, String password);
 
-    List<Trainer> getAll();
+    TrainerEntity findTrainerByUserUsername(String username);
 
-    Trainer get(int id);
+    //List<TrainerEntity> getAll();
 
-    Trainer updateTrainer(Trainer trainer);
+    //TrainerEntity get(int id);
+
+    //TrainerEntity updateTrainer(TrainerEntity trainerEntity);
 }

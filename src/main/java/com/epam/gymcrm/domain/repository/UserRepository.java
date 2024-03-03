@@ -1,18 +1,32 @@
 package com.epam.gymcrm.domain.repository;
 
-import com.epam.gymcrm.domain.model.User;
+
+import com.epam.gymcrm.infrastructure.entity.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserRepository {
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-    User createUser(User user);
 
-    List<User> getAll();
+    List<UserEntity> findUsersByFirstNameAndLastName(String firstName, String lastName);
 
-    User get(int id);
+    @Modifying
+    @Query("update UserEntity u set u.password = :password where u.username = :username")
+    int updatePassword(@Param("username") String username, @Param("password") String password);
 
-    List<User> findUsersByFirstNameAndLastName(String firstName, String lastName);
 
-    void updateUser();
+    @Modifying
+    @Query("update UserEntity u set u.isActive = true where u.username = :username")
+    int activateUser(@Param("username") String username);
+
+    @Modifying
+    @Query("update UserEntity u set u.isActive = false where u.username = :username")
+    int deactivateUser(@Param("username") String username);
+
 }

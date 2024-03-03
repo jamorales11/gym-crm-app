@@ -1,10 +1,11 @@
 package com.epam.gymcrm.domain.repository;
 
-import com.epam.gymcrm.domain.model.Training;
+import com.epam.gymcrm.infrastructure.entity.TrainingEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TrainingRepository {
+@Repository
+public interface TrainingRepository extends JpaRepository<TrainingEntity, Integer>, CustomTrainingRepository {
 
-    Training get(int id);
 
-    Training createTraining(Training training);
 }
