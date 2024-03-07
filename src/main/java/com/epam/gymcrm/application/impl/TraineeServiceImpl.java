@@ -18,6 +18,9 @@ import com.epam.gymcrm.infrastructure.entity.UserEntity;
 import com.epam.gymcrm.domain.repository.TraineeRepository;
 import com.epam.gymcrm.domain.repository.TrainerRepository;
 import com.epam.gymcrm.domain.repository.UserRepository;
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +44,27 @@ public class TraineeServiceImpl implements TraineeService {
     private ModelMapper modelMapper;
     private UserService userService;
 
+    private Counter newTraineesCounter;
+
+    private Counter deactivateTraineeCounter;
 
 
-    public TraineeServiceImpl(TraineeRepository traineeRepository, UserRepository userRepository, TrainerRepository trainerRepository, UserService userService) {
+
+    public TraineeServiceImpl(TraineeRepository traineeRepository, UserRepository userRepository, TrainerRepository trainerRepository, UserService userService, MeterRegistry registry) {
         this.traineeRepository = traineeRepository;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.userService = userService;
+
+        //counter
+        this.newTraineesCounter = Counter.builder("create_trainee_request_total").tag("version", "v1").description("Trainees Create Request Count").register(registry);
+        this.deactivateTraineeCounter = Counter.builder("deactivate_trainee_request_total").tag("version", "v1").description("Deactivate Trainee Request Count").register(registry);
+
     }
 
     @Override
     @Transactional
+    @Timed(value = "do.create.trainee.timed")
     public RegistrationResponseDTO createTraineeProfile(User userToCreate, Trainee traineeToCreate) {
 
         UserEntity userEntity = modelMapper.map(userToCreate, UserEntity.class);
@@ -68,6 +81,9 @@ public class TraineeServiceImpl implements TraineeService {
 
         log.debug("Trainee with traineeId: " + traineeEntityCreated.getTraineeId() +
                 " and userId: " + traineeEntityCreated.getUser().getId() + " has been created.");
+
+        //Incrementing counter metric
+        newTraineesCounter.increment();
 
 
         return RegistrationResponseDTO.builder()
@@ -171,6 +187,7 @@ public class TraineeServiceImpl implements TraineeService {
         if(i==0){
             throw new Exception("Trainee could not be deactivated");
         }
+        deactivateTraineeCounter.increment();
     }
 
 
