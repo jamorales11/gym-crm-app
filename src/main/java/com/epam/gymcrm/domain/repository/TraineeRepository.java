@@ -11,6 +11,8 @@ public interface TraineeRepository extends JpaRepository<TraineeEntity, Integer>
 
     TraineeEntity findTraineeByUserUsernameAndUserPassword(String username, String password);
 
+    Boolean existsTraineeByUserUsername(String username);
+
     TraineeEntity findTraineeByUserUsername(String username);
 
 

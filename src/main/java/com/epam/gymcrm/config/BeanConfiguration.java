@@ -7,6 +7,7 @@ import io.swagger.v3.oas.models.info.License;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.request.RequestContextListener;
 
 
 @Configuration
@@ -28,6 +29,10 @@ public class BeanConfiguration {
                 .externalDocs(new ExternalDocumentation()
                         .description("SpringShop Wiki Documentation")
                         .url("https://springshop.wiki.github.org/docs"));
+    }
+
+    @Bean public RequestContextListener requestContextListener(){
+        return new RequestContextListener();
     }
 
 

@@ -9,12 +9,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
+    Optional<UserEntity> findByUsername(String username);
+
+    Boolean existsByUsername(String username);
+
 
     List<UserEntity> findUsersByFirstNameAndLastName(String firstName, String lastName);
+
 
     @Modifying
     @Query("update UserEntity u set u.password = :password where u.username = :username")

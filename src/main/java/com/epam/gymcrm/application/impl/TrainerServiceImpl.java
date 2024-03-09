@@ -12,6 +12,8 @@ import com.epam.gymcrm.application.dto.updateProfile.UpdateTrainerProfileDto;
 import com.epam.gymcrm.domain.model.Trainer;
 import com.epam.gymcrm.domain.model.User;
 import com.epam.gymcrm.domain.exceptions.WrongCredentialsException;
+import com.epam.gymcrm.domain.repository.RoleRepository;
+import com.epam.gymcrm.infrastructure.entity.RoleEntity;
 import com.epam.gymcrm.infrastructure.entity.TraineeEntity;
 import com.epam.gymcrm.infrastructure.entity.TrainerEntity;
 import com.epam.gymcrm.infrastructure.entity.UserEntity;
@@ -21,10 +23,12 @@ import com.epam.gymcrm.domain.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,17 +38,25 @@ public class TrainerServiceImpl implements TrainerService {
 
     private final TrainerRepository trainerRepository;
     private final UserRepository userRepository;
+
+    private RoleRepository roleRepository;
+
+    private PasswordEncoder passwordEncoder;
+
     private final TrainingTypeRepository trainingTypeRepository;
 
     private ModelMapper modelMapper;
     private final UserService userService;
 
 
-    public TrainerServiceImpl(TrainerRepository trainerRepository, UserRepository userRepository, UserService userService, TrainingTypeRepository trainingTypeRepository) {
+    public TrainerServiceImpl(TrainerRepository trainerRepository, UserRepository userRepository, UserService userService, TrainingTypeRepository trainingTypeRepository,
+                              RoleRepository roleRepository) {
         this.trainerRepository = trainerRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.trainingTypeRepository = trainingTypeRepository;
+        this.roleRepository = roleRepository;
+
     }
 
     @Override
@@ -55,8 +67,13 @@ public class TrainerServiceImpl implements TrainerService {
         TrainerEntity trainerEntity = modelMapper.map(trainerToCreate, TrainerEntity.class);
 
         userEntity.setUsername(userService.calculateUsername(userToCreate.getFirstName(), userToCreate.getLastName()));
-        userEntity.setPassword(userService.generatePassword());
+
+        String pass = userService.generatePassword();
+        userEntity.setPassword(passwordEncoder.encode(pass));
         userEntity.setIsActive(true);
+
+        RoleEntity roles = roleRepository.findByName("ROLE_TRAINEE").get();
+        userEntity.setRoles(Collections.singleton(roles));
 
         UserEntity userEntityCreated = userRepository.save(userEntity);
         trainerEntity.setUser(userEntityCreated);
@@ -72,7 +89,7 @@ public class TrainerServiceImpl implements TrainerService {
 
         return RegistrationResponseDTO.builder()
                 .username(trainerEntityCreated.getUser().getUsername())
-                .password(trainerEntityCreated.getUser().getPassword())
+                .password(pass)
                 .build();
 
     }
@@ -221,6 +238,11 @@ public class TrainerServiceImpl implements TrainerService {
     @Autowired
     public void setModelMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
 

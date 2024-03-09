@@ -12,6 +12,8 @@ import com.epam.gymcrm.application.dto.updateProfile.UpdateTraineeProfileDto;
 import com.epam.gymcrm.domain.model.Trainee;
 import com.epam.gymcrm.domain.model.User;
 import com.epam.gymcrm.domain.exceptions.WrongCredentialsException;
+import com.epam.gymcrm.domain.repository.RoleRepository;
+import com.epam.gymcrm.infrastructure.entity.RoleEntity;
 import com.epam.gymcrm.infrastructure.entity.TraineeEntity;
 import com.epam.gymcrm.infrastructure.entity.TrainerEntity;
 import com.epam.gymcrm.infrastructure.entity.UserEntity;
@@ -24,10 +26,12 @@ import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +41,10 @@ public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeRepository traineeRepository;
     private final UserRepository userRepository;
+
+    private RoleRepository roleRepository;
+
+    private PasswordEncoder passwordEncoder;
 
     private final TrainerRepository trainerRepository;
 
@@ -50,11 +58,13 @@ public class TraineeServiceImpl implements TraineeService {
 
 
 
-    public TraineeServiceImpl(TraineeRepository traineeRepository, UserRepository userRepository, TrainerRepository trainerRepository, UserService userService, MeterRegistry registry) {
+    public TraineeServiceImpl(TraineeRepository traineeRepository, UserRepository userRepository, TrainerRepository trainerRepository,
+                              UserService userService, RoleRepository roleRepository, MeterRegistry registry) {
         this.traineeRepository = traineeRepository;
         this.userRepository = userRepository;
         this.trainerRepository = trainerRepository;
         this.userService = userService;
+        this.roleRepository = roleRepository;
 
         //counter
         this.newTraineesCounter = Counter.builder("create_trainee_request_total").tag("version", "v1").description("Trainees Create Request Count").register(registry);
@@ -71,8 +81,13 @@ public class TraineeServiceImpl implements TraineeService {
         TraineeEntity traineeEntity = modelMapper.map(traineeToCreate, TraineeEntity.class);
 
         userEntity.setUsername(userService.calculateUsername(userToCreate.getFirstName(), userToCreate.getLastName()));
-        userEntity.setPassword(userService.generatePassword());
+
+        String pass = userService.generatePassword();
+        userEntity.setPassword(passwordEncoder.encode(pass));
         userEntity.setIsActive(true);
+
+        RoleEntity roles = roleRepository.findByName("ROLE_TRAINEE").get();
+        userEntity.setRoles(Collections.singleton(roles));
 
         UserEntity userEntityCreated = userRepository.save(userEntity);
         traineeEntity.setUser(userEntityCreated);
@@ -88,7 +103,7 @@ public class TraineeServiceImpl implements TraineeService {
 
         return RegistrationResponseDTO.builder()
                 .username(traineeEntityCreated.getUser().getUsername())
-                .password(traineeEntityCreated.getUser().getPassword())
+                .password(pass)
                 .build();
     }
 
@@ -277,6 +292,8 @@ public class TraineeServiceImpl implements TraineeService {
         this.modelMapper = modelMapper;
     }
 
-
-
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 }
