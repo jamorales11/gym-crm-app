@@ -14,6 +14,7 @@ import com.epam.gymcrm.domain.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Tag(name = "Auth", description = "the Auth Api")
 @RestController
 @RequestMapping(value = "/api/auth")
+@Slf4j
 public class AuthController {
 
 
@@ -60,12 +64,27 @@ public class AuthController {
     @Operation(summary = "Login", description = "Username and password matching authentication")
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody RequestLoginDto requestLoginDto ){
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestLoginDto.getUsername(), requestLoginDto.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
 
-        return new ResponseEntity<>("User logged in successfully!", HttpStatus.OK);
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(requestLoginDto.getUsername(), requestLoginDto.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            log.info("User " + requestLoginDto.getUsername() + " logged in successfully");
+
+            return new ResponseEntity<>("User logged in successfully!", HttpStatus.OK);
+
+
+        } catch (RuntimeException usernameNotFoundException){
+            log.error("Incorrect credentials submitted in attempted login.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, usernameNotFoundException.getMessage(),usernameNotFoundException);
+        }
+
+
+
     }
 
 
@@ -80,6 +99,7 @@ public class AuthController {
             return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
 
         } catch (Exception e){
+            log.info("Incorrect credentials submitted in attempted login.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainee Not Created", e);
         }
 
@@ -100,6 +120,7 @@ public class AuthController {
             return new ResponseEntity<>(registrationResponseDTO, HttpStatus.CREATED);
 
         } catch (Exception e) {
+            log.info("Incorrect credentials submitted in attempted login.");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Trainer Not Created", e);
         }
     }

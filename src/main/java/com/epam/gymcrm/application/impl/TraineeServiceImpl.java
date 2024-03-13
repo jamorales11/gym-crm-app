@@ -97,6 +97,8 @@ public class TraineeServiceImpl implements TraineeService {
         log.debug("Trainee with traineeId: " + traineeEntityCreated.getTraineeId() +
                 " and userId: " + traineeEntityCreated.getUser().getId() + " has been created.");
 
+        log.info("Trainee " + traineeEntityCreated.getUser().getUsername() + " logged in successfully!");
+
         //Incrementing counter metric
         newTraineesCounter.increment();
 
@@ -115,6 +117,7 @@ public class TraineeServiceImpl implements TraineeService {
             TraineeEntity traineeEntity = traineeRepository.findTraineeByUserUsernameAndUserPassword(username,password);
 
             if(traineeEntity == null){
+                log.error("Trainee "+ username + " was not activated");
                 throw new WrongCredentialsException("Incorrect password submitted");
             }
 
@@ -148,6 +151,9 @@ public class TraineeServiceImpl implements TraineeService {
                                 .build())
                         .collect(Collectors.toList())));
 
+        log.info("Trainee " + username + " fetched successfully!");
+
+
         return traineeDto;
 
     }
@@ -169,6 +175,9 @@ public class TraineeServiceImpl implements TraineeService {
             trainerDtos.add(TrainerDto.builder().build());
         }
 
+        log.info("Trainee " + username + "'s trainer list fetched successfully!");
+
+
         return trainerDtos;
     }
 
@@ -186,8 +195,11 @@ public class TraineeServiceImpl implements TraineeService {
         int i = userRepository.updatePassword(username, newPassword);
 
         if(i==0){
-            throw new Exception("Trainer password could not be changed.");
+            log.error("Password could not be changed");
+            throw new Exception("Trainee password could not be changed.");
         }
+
+        log.info("Trainee " + username + "'s password changed successfully!");
 
     }
 
@@ -200,9 +212,13 @@ public class TraineeServiceImpl implements TraineeService {
         int i = userRepository.deactivateUser(username);
 
         if(i==0){
+            log.error("Trainee "+ username + " was not deactivated");
             throw new Exception("Trainee could not be deactivated");
         }
         deactivateTraineeCounter.increment();
+
+        log.info("Trainee " + username + " deactivated successfully!");
+
     }
 
 
@@ -214,8 +230,12 @@ public class TraineeServiceImpl implements TraineeService {
         int i = userRepository.activateUser(username);
 
         if(i==0){
+            log.error("Trainee "+ username + " was not activated");
             throw new Exception("Trainee could not be activated");
         }
+
+        log.info("Trainee " + username + " activated successfully!");
+
     }
 
     @Override
@@ -232,6 +252,9 @@ public class TraineeServiceImpl implements TraineeService {
 
         traineeRepository.save(traineeEntity);
 
+        log.info("Trainee " + updateTraineeProfileDto.getUsername() + " updated successfully!");
+
+
         TraineeDto traineeDto = modelMapper.map(traineeEntity, TraineeDto.class);
         traineeDto.setUserDto(modelMapper.map(traineeEntity.getUser(), UserDto.class));
 
@@ -246,6 +269,9 @@ public class TraineeServiceImpl implements TraineeService {
 
         TraineeEntity traineeEntity = traineeRepository.findTraineeByUserUsername(username);
         traineeRepository.delete(traineeEntity);
+
+        log.info("Trainee " + username + " deleted successfully!");
+
 
     }
 
@@ -275,6 +301,9 @@ public class TraineeServiceImpl implements TraineeService {
                             .specialization(modelMapper.map(trainer.getSpecialization(), TrainingTypeDto.class))
                     .build());
         }
+
+        log.info("Trainee " + username + "'s not assigned on trainer list fetched successfully!");
+
 
         return trainerDtos;
 

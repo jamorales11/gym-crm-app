@@ -54,6 +54,10 @@ public class TrainingServiceImpl implements TrainingService {
         if(!trainerEntity.getTrainees().contains(traineeEntity)){
             trainerEntity.getTrainees().add(traineeEntity);
             trainerRepository.save(trainerEntity);
+
+            log.info("Trainee " + traineeEntity.getUser().getUsername() + " added to trainer " + trainerEntity.getUser().getUsername()
+                    + " trainee list successfully!");
+
         }
 
 
@@ -67,6 +71,10 @@ public class TrainingServiceImpl implements TrainingService {
 
 
         trainingRepository.save(training);
+
+        log.info("Training  " + training.getName() + " created successfully for trainee " + traineeEntity.getUser().getUsername()
+                + " and trainer " + trainerEntity.getUser().getUsername());
+
 
     }
 
@@ -88,6 +96,9 @@ public class TrainingServiceImpl implements TrainingService {
 
 
         }
+
+        log.info("Trainee " + req.getUsername() + "'s training list fetched successfully!");
+
 
 
 
@@ -113,6 +124,9 @@ public class TrainingServiceImpl implements TrainingService {
 
 
         }
+
+        log.info("Trainer " + req.getUsername() + "'s training list fetched successfully!");
+
 
 
 

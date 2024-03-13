@@ -102,6 +102,8 @@ public class TrainerServiceImpl implements TrainerService {
                     trainerRepository.findTrainerByUserUsernameAndUserPassword(username, password);
 
             if (trainerEntity == null) {
+                log.error("Password could not be changed");
+
                 throw new WrongCredentialsException("Incorrect password submitted");
             }
 
@@ -165,6 +167,8 @@ public class TrainerServiceImpl implements TrainerService {
         int i = userRepository.updatePassword(username, newPassword);
 
         if(i==0){
+            log.error("Password could not be changed");
+
             throw new Exception("Trainer password could not be changed.");
         }
 
@@ -179,6 +183,8 @@ public class TrainerServiceImpl implements TrainerService {
         int i = userRepository.deactivateUser(username);
 
         if(i==0){
+            log.error("Trainer "+ username + " was not deactivated");
+
             throw new Exception("Trainer could not be deactivated.");
         }
 
@@ -193,6 +199,7 @@ public class TrainerServiceImpl implements TrainerService {
         int i = userRepository.activateUser(username);
 
         if(i==0){
+            log.error("Trainer "+ username + " was not activated");
             throw new Exception("Trainer could not be activated.");
         }
 

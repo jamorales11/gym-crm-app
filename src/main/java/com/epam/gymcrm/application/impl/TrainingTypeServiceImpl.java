@@ -36,6 +36,9 @@ public class TrainingTypeServiceImpl implements TrainingTypeService {
             trainingTypeListDtos.add(modelMapper.map(trainingTypeEntity, TrainingTypeListDto.class));
         }
 
+        log.info("TrainingType list has been fetched.");
+
+
 
         return trainingTypeListDtos;
 

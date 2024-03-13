@@ -3,6 +3,7 @@ package com.epam.gymcrm.application.impl;
 import com.epam.gymcrm.application.LoginAttemptService;
 import com.epam.gymcrm.domain.repository.UserRepository;
 import com.epam.gymcrm.infrastructure.entity.UserEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service("userDetailsService")
 @Transactional
+@Slf4j
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
 
@@ -33,6 +35,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         if (loginAttemptService.isBlocked()) {
+            log.info("3 failed login attempts. User "+ username + " has been blocked for 5 minutes");
             throw new RuntimeException("blocked");
         }
 

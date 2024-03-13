@@ -2,15 +2,16 @@ package com.epam.gymcrm.application.impl;
 
 import com.epam.gymcrm.domain.model.User;
 import com.epam.gymcrm.domain.repository.UserRepository;
+import com.epam.gymcrm.infrastructure.entity.UserEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
 
@@ -26,7 +27,7 @@ public class UserEntityServiceTest {
     @Test
     public void calculateUsernameTest(){
 
-        List<User> userList = new ArrayList<>();
+        List<UserEntity> userList = new ArrayList<UserEntity>();
 
         when(userRepository.findUsersByFirstNameAndLastName(Mockito.any(String.class),Mockito.any(String.class))).thenReturn(userList);
 
@@ -39,8 +40,8 @@ public class UserEntityServiceTest {
     @Test
     public void calculateUsernameExistingFirstNameLastNameTest(){
 
-        List<User> userList = new ArrayList<>(){{
-            add(new User(0,"FirstName", "LastName", "FirstName.LastName","asdffghopl", true));
+        List<UserEntity> userList = new ArrayList<UserEntity>(){{
+            add(new UserEntity(0,"FirstName", "LastName", "FirstName.LastName","asdffghopl", true, new HashSet<>()));
         }};
 
         when(userRepository.findUsersByFirstNameAndLastName(Mockito.any(String.class),Mockito.any(String.class))).thenReturn(userList);
